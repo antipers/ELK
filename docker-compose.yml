@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.5.2
+    image: elasticsearch:8.18.0
     container_name: elasticsearch
     environment:
       - discovery.type=single-node
@@ -17,9 +17,10 @@ services:
       - esdata:/usr/share/elasticsearch/data
     ports:
       - "9200:9200"
-
+    mem_limit: 1g
+    cpus: 0.5
   logstash:
-    image: docker.elastic.co/logstash/logstash:7.5.2
+    image: logstash:8.18.0
     container_name: logstash
     ports:
       - "5044:5044"  # для Filebeat 
@@ -28,9 +29,10 @@ services:
       - ./logstash.conf:/usr/share/logstash/pipeline/logstash.conf
     depends_on:
       - elasticsearch
-
+    mem_limit: 1g
+    cpus: 0.5
   kibana:
-    image: docker.elastic.co/kibana/kibana:7.5.2
+    image: kibana:8.18.0
     container_name: kibana
     environment:
       - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
@@ -38,7 +40,8 @@ services:
       - "5601:5601"
     depends_on:
       - elasticsearch
-
+    mem_limit: 1g
+    cpus: 0.5
 volumes:
   esdata:
     driver: local
